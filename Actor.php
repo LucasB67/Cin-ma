@@ -6,7 +6,8 @@ class Actor{
     private string   $_firstName;
     private DateTime $_birthDate;
     private String   $_sex;
-    private array    $_movies;
+    private array    $_casts;
+
 
     function __construct(string $name, string $firstName, string $birthDate, string $sex){
 
@@ -14,22 +15,23 @@ class Actor{
         $this->_firstName = $firstName;
         $this->_birthDate = new DateTime($birthDate);
         $this->_sex       = $sex;
-        $this->_movies    = [];
+        $this->_casts    = [];
     }
 
 
-    function addMovie(Movie $movie) : void{
+    function addCast(Cast $cast) : void{
 
-        $this->_movies[] = $movie;
+        $this->_casts[] = $cast;
     }
 
-    function deleteMovie(BankAccount $argMovie) : void {
+
+    function deleteCast(Cast $argCast) : void {
 
         $n = 0;
-        foreach($this->_movies as $movie){
+        foreach($this->_casts as $cast){
 
-            if ($movie == $argMovie){
-                unset($this->_movies[$n]); 
+            if ($cast == $argCast){
+                unset($this->_casts[$n]); 
                 return;
             }
             $n++;
@@ -37,20 +39,45 @@ class Actor{
         return;
     }
 
+
     function showMovies() : string {
 
-        if ($this->_movies){
-            $result = "Films dans lesquels $this joue :";
-            foreach($this->_movies as $movie){
-                $result .= "<li>".$movie.".</li>";
+        if ($this->_casts){
+            $result = "Films dans lesquels $this joue :<ul>";
+            foreach($this->_casts as $cast){
+                $result .= "<li>".$cast->getMovie().".</li>";
             }
-            return $result;
+            return $result."</ul>";
         }
         else
-            return "<li><i>Aucun film associé à <i>$this.</li>";
+            return "Aucun film associé à $this.<br>";
     }
 
 
+    function showRoles() : string {
+
+        if ($this->_casts){
+            $result = "Rôles joués par $this :<ul>";
+            foreach($this->_casts as $cast){
+                $result .= "<li>".$cast->getRole()." (".$cast->getMovie().").</li>";
+            }
+            return $result."</ul>";
+        }
+        else
+            return "Aucun rôle associé à $this.<br>";
+    }
+
+
+    function getName     () : string   {return $this->_name      ;}
+    function getFirstName() : string   {return $this->_firstName ;}
+    function getSex      () : string   {return $this->_sex       ;}
+    function getBirthDate() : DateTime {return $this->_birthDate ;}
+
+    function setName     (string $name)      : void {$this->_name      = $name                    ;}
+    function setFirstName(string $firstName) : void {$this->_firstName = $firstName               ;}
+    function setSex      (string $sex)       : void {$this->_sex       = $sex                     ;}
+    function setBirthDate(string $birthDate) : void {$this->_birthDate = new DateTime($birthDate) ;}
+    
 
     function __toString(){
 
