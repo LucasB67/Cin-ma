@@ -8,6 +8,7 @@ class Author{
     private String   $_sex;
     private array    $_movies;
 
+
     function __construct(string $name, string $firstName, string $birthDate, string $sex){
 
         $this->_name      = $name;
@@ -42,15 +43,26 @@ class Author{
     function showMovies() : string {
 
         if ($this->_movies){
-            $result = "Films de $this:";
+            $result = "Films de $this:<ul>";
             foreach($this->_movies as $movie){
                 $result .= "<li>".$movie.".</li>";
             }
-            return $result;
+            return $result."</ul>";
         }
         else
-            return "<li><i>Aucun film associé à <i>$this.</li>";
+            return "Aucun film associé à $this.<br>";
     }
+
+
+    function getName     () : string   {return $this->_name      ;}
+    function getFirstName() : string   {return $this->_firstName ;}
+    function getSex      () : string   {return $this->_sex       ;}
+    function getBirthDate() : DateTime {return $this->_birthDate ;}
+
+    function setName     (string $name)      : void {$this->_name      = $name                    ;}
+    function setFirstName(string $firstName) : void {$this->_firstName = $firstName               ;}
+    function setSex      (string $sex)       : void {$this->_sex       = $sex                     ;}
+    function setBirthDate(string $birthDate) : void {$this->_birthDate = new DateTime($birthDate) ;}
 
 
     function __toString(){
