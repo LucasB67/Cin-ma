@@ -6,9 +6,9 @@ class Movie{
     private DateTime $_releaseDate;
     private int      $_duration;
     private string   $_synopsis;
+    private Author   $_author;
     private array    $_genres;
     private array    $_casts;
-    private Author   $_author;
 
 
     function __construct(string $title, string $releaseDate, int $duration, string $synopsis, array $genres, Author $author){
@@ -17,71 +17,127 @@ class Movie{
         $this->_releaseDate = new DateTime($releaseDate);
         $this->_duration    = $duration;
         $this->_synopsis    = $synopsis;
+        $this->_author      = $author;
         $this->_genres      = $genres;
+        $this->_casts       = [];
         foreach($this->_genres as $_genre){
             $_genre->addMovie($this);
         }
-        $this->_casts  = [];
-        $this->_author = $author;
         $this->_author->addMovie($this);
     }
 
-    function appendCastMember(Cast $cast) : void{
 
-        $this->_casts[] = $cast;
-        $cast->getActor()->addMovie($this);
-        $cast->getRole()->addActor($cast->getActor());
+    function addCast(Cast $newCast) : void{
 
+        $this->_casts[] = $newCast;
+    }
+
+
+    function addGenre(Genre $genre) : void{
+
+        $this->_genres[] = $genre;
+    }
+
+
+    function deleteGenre(Genre $argGenre) : void{
+
+        $n = 0;
+        foreach($this->_genres as $genre){
+            if ($genre == $argGenre){
+                unset($this->_genres[$n]); 
+                return;
+            }
+            $n++;
+        }
+        return;
     }
 
 
     function showInformations() : string{
-        $result = "Film : $this<br>
-                   Année de production : ".$this->getProductionYear()."<br>
-                   Directeur :  $this->_author<br>
-                   Durée : $this->_duration minutes<br>
+        $result = "Film : $this.<br>
+                   Année de production : ".$this->getProductionYear().".<br>
+                   Directeur :  $this->_author.<br>
+                   Durée : $this->_duration minutes.<br>
                    Synopsis : $this->_synopsis<br>
                    Genres :".$this->showGenres()."
                    Casting :".$this->showCast()."<br>";
         return $result;
     }
 
+
     function getProductionYear() : string {
 
         return $this->_releaseDate -> format("Y");
     }
 
+
     function showCast() : string {
 
         if ($this->_casts){
-            $result = "";
+            $result = "<ul>";
             foreach($this->_casts as $cast){
                 $result .= "<li>".$cast.".</li>";
             }
-            return $result;
+            return $result."</ul>";
         }
         else
-            return "<li><i>Aucun casting associé à <i>$this.</li>";
+            return "Aucun casting associé à $this.";
+    }
+
+
+    function showActors() : string {
+
+        if ($this->_casts){
+            $result = "Acteurs ayant joués dans $this :<ul>";
+            foreach($this->_casts as $cast){
+                $result .= "<li>".$cast->getActor().".</li>";
+            }
+            return $result."</ul>";
+        }
+        else
+            return "Aucun acteur associé à $this.<br>";
+    }
+
+
+    function showRoles() : string {
+
+        if ($this->_casts){
+            $result = "Rôles présents dans $this :<ul>";
+            foreach($this->_casts as $cast){
+                $result .= "<li>".$cast->getRole().".</li>";
+            }
+            return $result."</ul>";
+        }
+        else
+            return "Aucun rôle associé à $this.<br>";
     }
 
     
     function showGenres() : string {
 
         if ($this->_genres){
-            $result = "";
+            $result = "<ul>";
             foreach($this->_genres as $_genre){
-                $result .= "<li>".$_genre."</li>";
+                $result .= "<li>".$_genre.".</li>";
             }
-            return $result;
+            return $result."</ul>";
         }
         else
-            return "<li><i>Aucun genre associé à <i>$this.</li>";
+            return "Aucun genre associé à $this.";
+    }
+
+
+    function setTitle(string $title) : void{
+        $this->_title = $title;
+    }
+    function getTitle() : string{
+        return $this->_title;
     }
 
 
     function __toString(){
 
-        return "<i>$this->_title </i>";
+        return "<i>$this->_title</i>";
     }
 }
 
