@@ -3,31 +3,51 @@
 class Role{
 
     private string   $_name;
-    private array    $_actors;
+    private array    $_casts;
 
     function __construct(string $name){
 
         $this->_name      = $name;
-        $this->_actors    = [];
+        $this->_casts    = [];
     }
 
-    function addActor(Actor $actor) : void{
 
-        $this->_actors[] = $actor;
+    function addCast(Cast $cast) : void{
+
+        $this->_casts[] = $cast;
     }
+
 
     function showActors() : string {
 
-        if ($this->_actors){
-            $result = "Acteurs ayant joués le rôle de $this:";
-            foreach($this->_actors as $actor){
-                $result .= "<li>".$actor.".</li>";
+        if ($this->_casts){
+            $result = "Acteurs ayant joués le rôle de $this :<ul>";
+            foreach($this->_casts as $cast){
+                $result .= "<li>".$cast->getActor()." (".$cast->getMovie().").</li>";
             }
-            return $result;
+            return $result."</ul>";
         }
         else
             return "<li><i>Aucun acteur associé à <i>$this.</li>";
     }
+
+
+    function showMovies() : string {
+
+        if ($this->_casts){
+            $result = "Films où l'on retrouve le rôle de $this :<ul>";
+            foreach($this->_casts as $cast){
+                $result .= "<li>".$cast->getMovie().".</li>";
+            }
+            return $result."</ul>";
+        }
+        else
+            return "Aucun film associé à $this.";
+    }
+
+    function getName()             : string {return $this->_name   ;}
+    function setName(string $name) : void   {$this->_name  = $name ;}
+
 
     function __toString(){
 
