@@ -11,19 +11,18 @@ class Genre{
         $this->_movies = [];
     }
 
-
-    function __toString(){
-
-        return "<i>$this->_name</i>";
-    }
-
     
     function showInformations() : string{
-        $result = "Genre : $this<br>Liste :";
-        foreach($this->_movies as $_movie){
-            $result .= "<li>".$_movie."</li>";
+        
+        if ($this->_movies){
+            $result = "Genre : $this<br>Liste des films :<ul>";
+            foreach($this->_movies as $_movie){
+                $result .= "<li>".$_movie."</li>";
+            }
+            return $result."</ul>";
         }
-        return $result;
+        else
+            return "Aucun film associé à $this.<br>";
     }
 
 
@@ -32,11 +31,12 @@ class Genre{
         $this->_movies[] = $movie;
     }
 
-    function deleteMovie(BankAccount $argMovie) : void {
+    function deleteMovie(Movie $argMovie) : void {
 
         $n = 0;
         foreach($this->_movies as $movie){
             if ($movie == $argMovie){
+                $this->_movies[$n]->deleteGenre($this);
                 unset($this->_movies[$n]); 
                 return;
             }
@@ -46,11 +46,16 @@ class Genre{
     }
 
 
-    function getName() : string{
-        return $this->_name;
-    }
-    function setName(string $name) : void{
-        $this->_name = $name;
+    function getName  () : string {return $this->_name  ;}
+    function getMovies() : array  {return $this->_movies;}
+
+    function setName  (string $name  ) : void {$this->_name   = $name  ;}
+    function setMovies(array  $movies) : void {$this->_movies = $movies;}
+
+
+    function __toString(){
+
+        return "<i>$this->_name</i>";
     }
 }
 
